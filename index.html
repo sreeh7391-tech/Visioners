@@ -3,318 +3,748 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Visioners.com</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <title>Braille Printer - Visioners</title>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --primary: #ffffff;
-      --secondary: #e0e0e0;
-      --accent: #ff3d00;
-      --dark: #121212;
-      --darker: #000000;
-      --light: #f5f5f5;
-      --gray: #b0b0b0;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
+    :root {
+      --white: #ffffff;
+      --black: #000000;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-900: #111827;
+      --blue: #0071e3;
+      --blue-hover: #0077ed;
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      color: var(--primary);
-      background-color: var(--dark);
-      margin: 0;
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: var(--white);
+      color: var(--gray-900);
+      overflow-x: hidden;
     }
 
-    a {
-      text-decoration: none;
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    /* ✅ Updated Hero Section */
-    .learnmore-section {
-      height: 100vh;
-      background-image: url('images/front.jpg');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: #121212;
-      position: relative;
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 44px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+    }
+
+    .nav-logo {
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--gray-900);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      color: var(--gray-900);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .nav-menu a:hover {
+      opacity: 1;
+    }
+
+    .nav-cta {
+      background: var(--blue);
+      color: var(--white);
+      padding: 6px 16px;
+      border-radius: 980px;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--blue-hover);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--black);
+      color: var(--white);
       text-align: center;
-      color: var(--primary);
+      padding: 60px 20px 80px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .learnmore-section::before {
-      content: "";
+    .hero::before {
+      content: '';
       position: absolute;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.4);
-      z-index: 0;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 1000px;
+      background: radial-gradient(circle, rgba(0, 113, 227, 0.3), transparent 60%);
+      pointer-events: none;
     }
 
-    .learnmore-content {
+    .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 700px;
-      padding: 2rem;
+      max-width: 980px;
+      margin: 0 auto;
     }
 
-    .learnmore-section h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .learnmore-section .tagline {
-      font-size: 1.2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .cta-btn {
-      display: inline-block;
-      background-color: var(--accent);
-      padding: 0.75rem 2rem;
-      border-radius: 50px;
-      color: var(--dark);
+    .hero-eyebrow {
+      font-size: 17px;
+      line-height: 1.4;
       font-weight: 600;
-      transition: 0.3s ease all;
-      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.3);
+      letter-spacing: 0.01em;
+      margin-bottom: 8px;
+      opacity: 0.9;
     }
 
-    .cta-btn:hover {
-      background-color: var(--primary);
-      color: var(--dark);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(255, 61, 0, 0.5);
+    .hero-title {
+      font-size: 56px;
+      line-height: 1.07;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      margin-bottom: 16px;
     }
 
-    .container {
-      max-width: 1140px;
-      margin: auto;
-      padding: 0 1rem;
+    .hero-subtitle {
+      font-size: 28px;
+      line-height: 1.14;
+      font-weight: 400;
+      margin-bottom: 24px;
+      opacity: 0.9;
     }
 
-    .section-title {
-      font-size: 2.5rem;
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      padding: 12px 28px;
+      border-radius: 980px;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 500;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+    }
+
+    .btn-secondary {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 500;
+      display: inline-block;
+      transition: color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      text-decoration: underline;
+    }
+
+    .hero-image {
+      max-width: 900px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Feature Highlight Section */
+    .feature-highlight {
+      background: var(--gray-50);
+      padding: 100px 20px;
+    }
+
+    .feature-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .feature-text h2 {
+      font-size: 48px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      margin-bottom: 20px;
+    }
+
+    .feature-text p {
+      font-size: 21px;
+      line-height: 1.38;
+      color: var(--gray-600);
+      margin-bottom: 30px;
+    }
+
+    .feature-image {
       text-align: center;
-      color: var(--primary);
-      margin: 4rem 0 2rem;
-      position: relative;
     }
 
-    .section-title::after {
-      content: '';
-      display: block;
-      height: 4px;
-      width: 80px;
-      background-color: var(--accent);
-      margin: 0.5rem auto 0;
-      border-radius: 2px;
+    .feature-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 18px;
+    }
+
+    /* Features Grid */
+    .features-section {
+      background: var(--white);
+      padding: 100px 20px;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 80px;
+    }
+
+    .section-header h2 {
+      font-size: 48px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      font-size: 21px;
+      line-height: 1.38;
+      color: var(--gray-600);
     }
 
     .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
       display: grid;
-      gap: 2rem;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
     }
 
     .feature-card {
-      background-color: var(--darker);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-      transition: all 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      padding: 40px 20px;
     }
 
     .feature-icon {
-      font-size: 3rem;
-      color: var(--accent);
-      margin-bottom: 1rem;
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: block;
     }
 
-    .feature-title {
-      font-size: 1.5rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
+    .feature-card h3 {
+      font-size: 24px;
+      line-height: 1.17;
       font-weight: 600;
+      margin-bottom: 12px;
     }
 
-    .feature-desc {
-      color: var(--gray);
-      font-size: 1rem;
+    .feature-card p {
+      font-size: 17px;
+      line-height: 1.47;
+      color: var(--gray-600);
+    }
+
+    /* Gallery Section */
+    .gallery-section {
+      background: var(--gray-900);
+      color: var(--white);
+      padding: 100px 20px;
+    }
+
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .gallery-header h2 {
+      font-size: 48px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      margin-bottom: 16px;
     }
 
     .gallery-grid {
+      max-width: 1200px;
+      margin: 0 auto;
       display: grid;
-      gap: 2rem;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      margin-bottom: 4rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
 
     .gallery-item {
+      position: relative;
       overflow: hidden;
-      border-radius: 10px;
-      background-color: #121212;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 240px;
+      border-radius: 18px;
+      aspect-ratio: 4/3;
     }
 
     .gallery-item img {
       width: 100%;
-      height: auto;
-      max-height: 240px;
-      object-fit: contain;
-      transition: all 0.4s ease;
-      filter: brightness(0.9);
-      border-radius: 10px;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
     }
 
     .gallery-item:hover img {
-      filter: brightness(1);
+      transform: scale(1.05);
     }
 
-    footer {
-      background: var(--darker);
-      color: var(--gray);
-      padding: 3rem 1rem;
+    /* Tech Specs */
+    .specs-section {
+      background: var(--white);
+      padding: 100px 20px;
+    }
+
+    .specs-container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .specs-header {
       text-align: center;
-      font-size: 0.9rem;
-      border-top: 1px solid var(--secondary);
+      margin-bottom: 60px;
     }
 
-    footer .footer-links {
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
+    .specs-header h2 {
+      font-size: 48px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      margin-bottom: 16px;
     }
 
-    .footer-link {
-      color: var(--gray);
-      transition: color 0.3s ease;
+    .spec-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--gray-200);
+      gap: 40px;
     }
 
-    .footer-link:hover {
-      color: var(--accent);
+    .spec-label {
+      font-size: 17px;
+      line-height: 1.47;
+      font-weight: 600;
     }
 
-    @media (max-width: 768px) {
-      .learnmore-section h1 {
-        font-size: 2.2rem;
+    .spec-value {
+      font-size: 17px;
+      line-height: 1.47;
+      color: var(--gray-600);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--gray-50);
+      padding: 120px 20px;
+      text-align: center;
+    }
+
+    .cta-content h2 {
+      font-size: 48px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      margin-bottom: 20px;
+    }
+
+    .cta-content p {
+      font-size: 21px;
+      line-height: 1.38;
+      color: var(--gray-600);
+      margin-bottom: 40px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      padding: 40px 20px 20px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .footer-section h4 {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--gray-900);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul li a {
+      font-size: 12px;
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-section ul li a:hover {
+      color: var(--gray-900);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-600);
+    }
+
+    /* Responsive */
+    @media (max-width: 1068px) {
+      .hero-title {
+        font-size: 48px;
       }
 
-      .section-title {
-        font-size: 2rem;
+      .hero-subtitle {
+        font-size: 24px;
+      }
+
+      .feature-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .features-grid,
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-content {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 400px) {
-      .learnmore-section h1 {
-        font-size: 1.7rem;
+    @media (max-width: 734px) {
+      .nav-menu {
+        display: none;
       }
 
-      .learnmore-section .tagline {
-        font-size: 1rem;
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-subtitle {
+        font-size: 21px;
+      }
+
+      .feature-text h2,
+      .section-header h2,
+      .gallery-header h2,
+      .specs-header h2,
+      .cta-content h2 {
+        font-size: 32px;
+      }
+
+      .feature-text p,
+      .section-header p,
+      .cta-content p {
+        font-size: 17px;
+      }
+
+      .features-grid,
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .spec-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- ✅ Hero Section with Full Scanner Image -->
-  <section class="learnmore-section">
-    <div class="learnmore-content">
-      <h1>Scanner Integrated Braille Printer</h1>
-      <p class="tagline">Experience unmatched precision and performance in printing</p>
-      <a href="#features" class="cta-btn">Discover Features</a>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Visioners</a>
+      <ul class="nav-menu">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#specs">Specs</a></li>
+      </ul>
+      <a href="print.html" class="nav-cta">Print</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">New</p>
+      <h1 class="hero-title">Scanner Integrated<br>Braille Printer</h1>
+      <p class="hero-subtitle">Independence through innovation.<br>No computer. No internet. Just accessibility.</p>
+      <div class="hero-buttons">
+        <a href="#features" class="btn-primary">Learn more</a>
+        <a href="print.html" class="btn-secondary">Start printing →</a>
+      </div>
+      <div class="hero-image">
+        <img src="images/front.jpg" alt="Scanner Integrated Braille Printer">
+      </div>
     </div>
   </section>
 
-  <!-- ✅ Features Section -->
-  <section id="features" class="container">
-    <h2 class="section-title">Key Features</h2>
+  <!-- Feature Highlight 1 -->
+  <section class="feature-highlight">
+    <div class="feature-container">
+      <div class="feature-text">
+        <h2>Scan. Convert. Print.<br>All in one device.</h2>
+        <p>Simply place any printed document on the scanner. Our advanced system reads the text and instantly converts it to Braille. No computer required.</p>
+        <a href="#features" class="btn-secondary">Explore features →</a>
+      </div>
+      <div class="feature-image">
+        <img src="images/printer.jpg" alt="Braille conversion process">
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Highlight 2 -->
+  <section class="feature-highlight" style="background: var(--white);">
+    <div class="feature-container" style="flex-direction: row-reverse;">
+      <div class="feature-text">
+        <h2>Built for every environment.</h2>
+        <p>Energy-efficient design powered for rural and urban settings alike. Multilingual support in English, Hindi, and regional languages makes learning accessible to everyone.</p>
+      </div>
+      <div class="feature-image">
+        <img src="images/inbox1.jpg" alt="Device components">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="section-header">
+      <h2>Designed for independence</h2>
+      <p>Every feature thoughtfully engineered to empower users with seamless access to written content.</p>
+    </div>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">📄 </div>
-        <h3 class="feature-title">Scan & Print in Braille</h3>
-        <p class="feature-desc">Just place a printed document on the scanner — the system reads the text and instantly prints it in Braille. No extra steps or devices needed.
-</p>
+        <span class="feature-icon">📄</span>
+        <h3>Instant Conversion</h3>
+        <p>Advanced OCR technology converts printed text to Braille in seconds with remarkable accuracy.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">💡</div>
-        <h3 class="feature-title">No Computer or Internet Needed
-</h3>
-        <p class="feature-desc">This is a fully standalone device. It works without needing a computer or internet — ideal for schools and remote institutions.
-</p>
+        <span class="feature-icon">💡</span>
+        <h3>Standalone Operation</h3>
+        <p>No computer or internet connection needed. Perfect for schools and remote institutions.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🧱 </div>
-        <h3 class="feature-title">Removable Braille Slate
-</h3>
-        <p class="feature-desc">Comes with a flexible Braille slate system that can be detached or adjusted for different paper sizes and printing formats.
-
-</p>
+        <span class="feature-icon">🧱</span>
+        <h3>Flexible Slate System</h3>
+        <p>Removable Braille slate adapts to multiple paper sizes and formats for maximum versatility.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🔋 </div>
-        <h3 class="feature-title">Energy Efficient
-</h3>
-        <p class="feature-desc">Runs on low power, making it suitable for rural or low-resource areas. Energy-saving design helps reduce electricity costs.
-</p>
+        <span class="feature-icon">🔋</span>
+        <h3>Low Power Design</h3>
+        <p>Energy-efficient operation reduces costs and environmental impact while maintaining performance.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🌐 </div>
-        <h3 class="feature-title">Multilingual Braille Support
-</h3>
-        <p class="feature-desc">Supports printing Braille in multiple languages like English, Hindi, and regional languages helping more students access learning.
-</p>
+        <span class="feature-icon">🌐</span>
+        <h3>Multiple Languages</h3>
+        <p>Full support for English, Hindi, and regional language Braille translation.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🛠 </div>
-        <h3 class="feature-title">Easy Maintenance Design
-</h3>
-        <p class="feature-desc">Designed with simplicity in mind. Easy to open, clean, and manage, even by non-technical staff in schools and institutions.</p>
+        <span class="feature-icon">🛠</span>
+        <h3>Simple Maintenance</h3>
+        <p>User-friendly design allows easy cleaning and servicing by non-technical staff.</p>
       </div>
     </div>
   </section>
 
-  <!-- ✅ Gallery Section -->
-  <section class="container">
-    <h2 class="section-title">In Action</h2>
+  <!-- Gallery Section -->
+  <section id="gallery" class="gallery-section">
+    <div class="gallery-header">
+      <h2>Precision engineering.<br>Beautiful design.</h2>
+    </div>
     <div class="gallery-grid">
       <div class="gallery-item">
-        <img src="images/inbox1.jpg" alt="Braille printer sample 1">
+        <img src="images/inbox1.jpg" alt="Internal components">
       </div>
       <div class="gallery-item">
-        <img src="images/inbox2.jpg" alt="Braille printer sample 2">
+        <img src="images/inbox2.jpg" alt="Braille mechanism">
       </div>
       <div class="gallery-item">
-        <img src="images/printer.jpg" alt="Braille printer sample 3">
+        <img src="images/printer.jpg" alt="Printer in operation">
       </div>
     </div>
   </section>
 
-  <!-- ✅ Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="#support" class="footer-link">Help Center</a>
-      <a href="#warranty" class="footer-link">Product Warranty</a>
-      <a href="#contact" class="footer-link">Contact Us</a>
-      <a href="#privacy" class="footer-link">Privacy Policy</a>
+  <!-- Tech Specs -->
+  <section id="specs" class="specs-section">
+    <div class="specs-container">
+      <div class="specs-header">
+        <h2>Technical Specifications</h2>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Operation</div>
+        <div class="spec-value">Fully standalone, no computer or internet required</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Power</div>
+        <div class="spec-value">Energy-efficient low-power consumption</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Languages</div>
+        <div class="spec-value">English, Hindi, and multiple regional languages</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Paper Support</div>
+        <div class="spec-value">Multiple sizes with removable slate system</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Maintenance</div>
+        <div class="spec-value">User-serviceable design for easy upkeep</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Scanning</div>
+        <div class="spec-value">Integrated high-resolution document scanner</div>
+      </div>
     </div>
-    <div>&copy; 2025 Visioners Inc. All rights reserved.</div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Transform accessibility<br>in your institution.</h2>
+      <p>Join schools and organizations worldwide in making<br>written content accessible to everyone.</p>
+      <div class="hero-buttons">
+        <a href="print.html" class="btn-primary">Get started</a>
+        <a href="#contact" class="btn-secondary">Contact sales →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#specs">Tech Specs</a></li>
+          <li><a href="print.html">Print Page</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#buy">Buy Now</a></li>
+          <li><a href="#financing">Financing</a></li>
+          <li><a href="#trade-in">Trade In</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#help">Help Center</a></li>
+          <li><a href="#warranty">Warranty</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About Visioners</a></li>
+          <li><a href="#newsroom">Newsroom</a></li>
+          <li><a href="#careers">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#terms">Terms of Use</a></li>
+          <li><a href="#accessibility">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Copyright © 2025 Visioners Inc. All rights reserved.
+    </div>
   </footer>
 
 </body>
