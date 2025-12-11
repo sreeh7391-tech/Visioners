@@ -555,7 +555,7 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
-      <p class="hero-eyebrow">New</p>
+    
       <h1 class="hero-title">Scanner Integrated<br>Braille Printer</h1>
       <p class="hero-subtitle">Independence through innovation.<br>No computer. No internet. Just accessibility.</p>
       <div class="hero-buttons">
@@ -654,37 +654,118 @@
   </section>
 
   <!-- Tech Specs -->
-  <section id="specs" class="specs-section">
-    <div class="specs-container">
-      <div class="specs-header">
-        <h2>Technical Specifications</h2>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Operation</div>
-        <div class="spec-value">Fully standalone, no computer or internet required</div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Power</div>
-        <div class="spec-value">Energy-efficient low-power consumption</div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Languages</div>
-        <div class="spec-value">English, Hindi, and multiple regional languages</div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Paper Support</div>
-        <div class="spec-value">Multiple sizes with removable slate system</div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Maintenance</div>
-        <div class="spec-value">User-serviceable design for easy upkeep</div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-label">Scanning</div>
-        <div class="spec-value">Integrated high-resolution document scanner</div>
-      </div>
+<section id="specs" class="specs-section" style="background: var(--white); padding: 120px 20px;">
+  <div class="specs-container" style="max-width: 1100px; margin: 0 auto;">
+
+    <div class="specs-header" style="text-align: center; margin-bottom: 70px;">
+      <h2 style="font-size: 52px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px;">
+        Technical Specifications
+      </h2>
+      <p style="font-size: 20px; color: var(--gray-600); max-width: 600px; margin: 0 auto;">
+        Engineered with precision. Built for reliability.
+      </p>
     </div>
-  </section>
+
+    <div class="specs-grid" style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    ">
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">⚙️</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Operation</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          Fully standalone device — no computer or internet required.
+        </p>
+      </div>
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">🔌</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Power Efficiency</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          Designed for ultra-low energy consumption for all environments.
+        </p>
+      </div>
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">🌐</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Language Support</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          English, Hindi, and multiple regional languages fully supported.
+        </p>
+      </div>
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">📄</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Paper Compatibility</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          Multiple paper sizes supported with a modular removable slate.
+        </p>
+      </div>
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">🛠️</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Maintenance</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          Easy-to-maintain layout with accessible components.
+        </p>
+      </div>
+
+      <div class="spec-card" style="
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 32px;
+        border-radius: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0px 12px 32px rgba(0,0,0,0.08)';" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <div style="font-size: 36px; margin-bottom: 12px;">📷</div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Scanning System</h3>
+        <p style="font-size: 16px; color: var(--gray-600);">
+          Integrated high-resolution document scanner for crisp OCR accuracy.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
   <!-- CTA Section -->
   <section class="cta-section">
