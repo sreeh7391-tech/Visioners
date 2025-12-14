@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Image → Text (Tesseract.js)</title>
+  <title>Visioners: Image to Braille</title>
 
-  <!-- Stable Tesseract.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.1/tesseract.min.js"></script>
 
   <style>
     :root{
-      --bg:#f5f7fb; --card:#fff; --accent:#2b6ef6;
+      --bg:#f5f7fb; --card:#fff; --accent:#2b6ef6; --print:#ff9800;
     }
     body{
       background:var(--bg);
@@ -34,11 +33,18 @@
     #preview{max-width:320px; max-height:320px; border-radius:8px; display:block; margin:auto;}
     .row{display:flex; gap:16px; margin-top:14px; align-items:flex-start;}
     .col{flex:1;}
+    
+    /* Button Styles */
     button{
       background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:8px;
-      cursor:pointer; font-weight:600;
+      cursor:pointer; font-weight:600; transition: 0.2s;
     }
     button:disabled{opacity:0.6; cursor:not-allowed;}
+    
+    /* Specific style for Print Button */
+    #printBtn { background: var(--print); }
+    #printBtn:hover { background: #e68900; }
+
     select{padding:8px;border-radius:8px;border:1px solid #d6d9ec;}
     .status{font-size:13px; color:#334055; margin-top:8px;}
     pre{
@@ -53,8 +59,8 @@
   <div class="card" role="main">
     <header>
       <div>
-        <h1>Image → Text (Tesseract.js)</h1>
-        <div class="small">Upload an image, or drag & drop — OCR runs in your browser.</div>
+        <h1>Image → Braille</h1>
+        <div class="small">1. Upload Image (Web) → 2. Connect to Printer WiFi → 3. Print</div>
       </div>
 
       <div class="controls">
@@ -62,7 +68,7 @@
         <select id="lang">
           <option value="eng" selected>English</option>
         </select>
-        <button id="clearBtn" type="button">Clear</button>
+        <button id="clearBtn" type="button" style="background:#888;">Clear</button>
       </div>
     </header>
 
@@ -81,19 +87,24 @@
           <div class="status" id="status">No image loaded.</div>
           <div style="margin-top:10px;">
             <button id="ocrBtn" disabled>Extract Text</button>
-            <button id="downloadBtn" disabled style="margin-left:8px">Download .txt</button>
           </div>
         </div>
 
         <div class="col">
-          <div style="margin-bottom:8px; font-weight:600">Recognized Text</div>
+          <div style="margin-bottom:8px; font-weight:600; display:flex; justify-content:space-between;">
+             <span>Recognized Text</span>
+             <button id="printBtn" disabled>Print to Braille</button>
+          </div>
           <pre id="output">— results will appear here —</pre>
+          <div style="text-align:right; margin-top:5px;">
+            <button id="downloadBtn" disabled style="background:#556; font-size:12px;">Save .txt</button>
+          </div>
         </div>
       </div>
     </section>
 
     <footer>
-      <div class="small">Runs fully offline in your browser.</div>
+      <div class="small">Visioners Braille Project</div>
     </footer>
   </div>
 
@@ -107,6 +118,7 @@
     const clearBtn = document.getElementById('clearBtn');
     const langSelect = document.getElementById('lang');
     const downloadBtn = document.getElementById('downloadBtn');
+    const printBtn = document.getElementById('printBtn');
 
     let currentDataUrl = null;
 
@@ -114,6 +126,7 @@
     function enableOCR(enable){
       ocrBtn.disabled = !enable;
       downloadBtn.disabled = true;
+      printBtn.disabled = true;
     }
 
     ['dragenter','dragover'].forEach(e=>{
@@ -162,7 +175,7 @@
 
     ocrBtn.addEventListener('click', async ()=>{
       if(!currentDataUrl) return;
-      setStatus('Starting OCR...');
+      setStatus('Starting OCR... (Needs Internet)');
       ocrBtn.disabled = true;
 
       try{
@@ -177,14 +190,19 @@
         await worker.initialize(lang);
 
         const { data } = await worker.recognize(currentDataUrl);
-        output.textContent = data.text || '— No text found —';
+        
+        // Clean up text (remove excessive newlines for the printer)
+        let cleanText = data.text.replace(/(\r\n|\n|\r)/gm, " ");
+        output.textContent = cleanText || '— No text found —';
 
         downloadBtn.disabled = false;
+        printBtn.disabled = false; // Enable Print Button
+        
         await worker.terminate();
-        setStatus('OCR complete.');
+        setStatus('OCR complete. Connect to Printer WiFi now.');
       }catch(err){
         output.textContent = 'Error: ' + err.message;
-        setStatus('Error.');
+        setStatus('Error during OCR.');
       }
 
       ocrBtn.disabled = false;
@@ -197,6 +215,40 @@
       a.href = URL.createObjectURL(blob);
       a.download = 'ocr-output.txt';
       a.click();
+    });
+
+    // --- NEW: PRINT TO BRAILLE FUNCTION ---
+    printBtn.addEventListener('click', () => {
+        const textToPrint = output.textContent.trim();
+
+        if (!textToPrint || textToPrint === '— No text found —') {
+            alert("No text to print!");
+            return;
+        }
+
+        // Warning: Based on your Arduino code, long strings might get cut off
+        // or you might need to increase the buffer size in your Arduino code.
+        
+        // Construct URL for ESP8266
+        var espAddress = "http://192.168.4.1/print";
+        var fullUrl = espAddress + "?text=" + encodeURIComponent(textToPrint);
+
+        setStatus("Sending to Printer...");
+
+        fetch(fullUrl)
+        .then(response => {
+            if (response.ok) {
+                alert("Sent to Braille Printer!");
+                setStatus("Sent successfully.");
+            } else {
+                alert("Connected, but printer returned an error.");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Connection Failed!\n\n1. Go to Phone Settings.\n2. Connect WiFi to 'Braille_Printer_AP'.\n3. Come back and click Print again.");
+            setStatus("Connection failed. Check WiFi.");
+        });
     });
 
     enableOCR(false);
