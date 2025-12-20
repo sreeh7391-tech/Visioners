@@ -1,257 +1,263 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Visioners: Image to Braille</title>
+<meta charset="UTF-8">
+<title>Visioners – Image to Braille (Voice & Text)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.1/tesseract.min.js"></script>
+<style>
+body{
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background:#f5f7fb;
+  padding:20px;
+  display: flex;
+  justify-content: center;
+}
+.card{
+  width: 100%;
+  max-width:800px;
+  background:#fff;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+h2 { margin-top: 0; color: #1e293b; }
 
-  <style>
-    :root{
-      --bg:#f5f7fb; --card:#fff; --accent:#2b6ef6; --print:#ff9800;
-    }
-    body{
-      background:var(--bg);
-      font-family:Inter, Roboto, Arial, sans-serif;
-      margin:0; padding:28px; display:flex; align-items:flex-start; justify-content:center;
-    }
-    .card{
-      width:100%; max-width:900px; background:var(--card); border-radius:12px;
-      box-shadow:0 6px 30px rgba(20,30,60,0.08); padding:22px;
-    }
-    header{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-    h1{margin:0; font-size:20px;}
-    .controls{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
-    .drop{
-      border:2px dashed #d7dbe8; border-radius:10px; padding:18px; text-align:center;
-      display:flex; align-items:center; justify-content:center; gap:12px; cursor:pointer;
-      background:linear-gradient(180deg, rgba(250,251,255,0.6), transparent);
-      width:100%; min-height:160px;
-    }
-    input[type=file]{display:none;}
-    #preview{max-width:320px; max-height:320px; border-radius:8px; display:block; margin:auto;}
-    .row{display:flex; gap:16px; margin-top:14px; align-items:flex-start;}
-    .col{flex:1;}
-    
-    /* Button Styles */
-    button{
-      background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:8px;
-      cursor:pointer; font-weight:600; transition: 0.2s;
-    }
-    button:disabled{opacity:0.6; cursor:not-allowed;}
-    
-    /* Specific style for Print Button */
-    #printBtn { background: var(--print); }
-    #printBtn:hover { background: #e68900; }
+.drop{
+  border:3px dashed #cbd5e1;
+  padding:30px;
+  text-align:center;
+  border-radius:12px;
+  cursor:pointer;
+  transition: all 0.2s;
+  background: #f8fafc;
+  color: #64748b;
+}
+.drop:hover, .drop:focus { background: #eef2ff; border-color: #2b6ef6; outline: none; color: #2b6ef6; }
+input[type=file]{display:none;}
 
-    select{padding:8px;border-radius:8px;border:1px solid #d6d9ec;}
-    .status{font-size:13px; color:#334055; margin-top:8px;}
-    pre{
-      background:#0f1724; color:#e6eef8; padding:14px; border-radius:8px; overflow:auto;
-      max-height:360px; white-space:pre-wrap; word-break:break-word; font-family:monospace; font-size:13px;
-    }
-    footer{margin-top:14px; font-size:13px; color:#404b66;}
-    .small{font-size:12px; color:#556;}
-  </style>
+.row{display:flex; gap:20px; margin-top:20px; flex-wrap:wrap;}
+.left{max-width:300px; width:100%;}
+img{max-width:100%; display:none; border-radius:8px; margin-bottom:10px; border: 1px solid #e2e8f0;}
+
+/* Button Styles */
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  background:#2b6ef6;
+  color:#fff;
+  cursor:pointer;
+  margin-top:10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+button:disabled{opacity:0.5; cursor:not-allowed;}
+button:hover:not(:disabled) { opacity: 0.9; }
+
+#printBtn{background:#f97316;} /* Orange */
+#readBtn{background:#10b981; margin-left: 10px;} /* Green */
+
+/* Text Area Styles */
+textarea {
+  width: 100%;
+  height: 200px;
+  background:#1e293b;
+  color:#e2e8f0;
+  padding:15px;
+  border-radius:8px;
+  border: none;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+textarea:focus { outline: 2px solid #2b6ef6; }
+
+.status{margin-top:8px;font-size:13px; color:#64748b; font-weight: 500;}
+</style>
 </head>
+
 <body>
-  <div class="card" role="main">
-    <header>
-      <div>
-        <h1>Image → Braille</h1>
-        <div class="small">1. Upload Image (Web) → 2. Connect to Printer WiFi → 3. Print</div>
-      </div>
 
-      <div class="controls">
-        <label for="lang">Language</label>
-        <select id="lang">
-          <option value="eng" selected>English</option>
-        </select>
-        <button id="clearBtn" type="button" style="background:#888;">Clear</button>
-      </div>
-    </header>
-
-    <section style="margin-top:14px;">
-      <label class="drop" id="dropZone">
-        <div style="max-width:720px;">
-          <strong>Drag & Drop an image here</strong>
-          <div class="small">or click to choose a file</div>
-          <input id="fileInput" type="file" accept="image/*">
-        </div>
-      </label>
-
-      <div class="row">
-        <div class="col" style="max-width:360px;">
-          <img id="preview" style="display:none">
-          <div class="status" id="status">No image loaded.</div>
-          <div style="margin-top:10px;">
-            <button id="ocrBtn" disabled>Extract Text</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div style="margin-bottom:8px; font-weight:600; display:flex; justify-content:space-between;">
-             <span>Recognized Text</span>
-             <button id="printBtn" disabled>Print to Braille</button>
-          </div>
-          <pre id="output">— results will appear here —</pre>
-          <div style="text-align:right; margin-top:5px;">
-            <button id="downloadBtn" disabled style="background:#556; font-size:12px;">Save .txt</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="small">Visioners Braille Project</div>
-    </footer>
+<div class="card">
+  <h2>Image → Braille & Speech</h2>
+  
+  <div class="drop" id="dropZone" tabindex="0" role="button" aria-label="Upload Image Area">
+    <span style="font-size: 24px;">📂</span><br>
+    <b>Click to Upload Image</b>
+    <br><small>(or just type text below)</small>
+    <input id="fileInput" type="file" accept="image/png,image/jpeg">
   </div>
 
-  <script>
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const preview = document.getElementById('preview');
-    const ocrBtn = document.getElementById('ocrBtn');
-    const statusEl = document.getElementById('status');
-    const output = document.getElementById('output');
-    const clearBtn = document.getElementById('clearBtn');
-    const langSelect = document.getElementById('lang');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const printBtn = document.getElementById('printBtn');
+  <div class="row">
+    <div class="left">
+      <img id="preview" alt="Uploaded Image Preview">
+      <div class="status" id="status" aria-live="polite">Ready. Upload or type text.</div>
+      <button id="ocrBtn" style="width:100%" disabled>🔍 Extract Text from Image</button>
+    </div>
 
-    let currentDataUrl = null;
+    <div style="flex:1;">
+      <label for="output" style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">TEXT TO PRINT (You can edit this):</label>
+      
+      <textarea id="output" placeholder="Type here or upload an image to extract text..."></textarea>
+      
+      <div style="display:flex; align-items:center; margin-top:10px;">
+        <button id="printBtn">🖨️ Print to Braille</button>
+        <button id="readBtn" title="Read text out loud">🔊 Read Aloud</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function setStatus(t){ statusEl.textContent = t; }
-    function enableOCR(enable){
-      ocrBtn.disabled = !enable;
-      downloadBtn.disabled = true;
-      printBtn.disabled = true;
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const OCR_API_KEY = "K83796517488957"; // OCR.space Free Key
+
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("fileInput");
+  const preview = document.getElementById("preview");
+  const statusEl = document.getElementById("status");
+  const ocrBtn = document.getElementById("ocrBtn");
+  const output = document.getElementById("output");
+  const printBtn = document.getElementById("printBtn");
+  const readBtn = document.getElementById("readBtn");
+
+  let imageDataUrl = null;
+
+  // --- 🗣️ SPEECH FUNCTION ---
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; 
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function setStatus(msg){ statusEl.textContent = msg; }
+
+  // --- Upload Logic ---
+  dropZone.onclick = () => { fileInput.value = ""; fileInput.click(); };
+  dropZone.onkeypress = (e) => { if(e.key === 'Enter') { fileInput.click(); } };
+
+  fileInput.onchange = () => {
+    const file = fileInput.files[0];
+    if(!file) return;
+
+    if(!file.type.startsWith("image/")){
+      alert("Please select a valid image file."); return;
     }
 
-    ['dragenter','dragover'].forEach(e=>{
-      dropZone.addEventListener(e, ev=>{ ev.preventDefault(); dropZone.style.borderColor='#a9b6ff'; });
-    });
-    ['dragleave','drop'].forEach(e=>{
-      dropZone.addEventListener(e, ev=>{ ev.preventDefault(); dropZone.style.borderColor=''; });
-    });
-
-    dropZone.addEventListener('click', ()=> fileInput.click());
-    dropZone.addEventListener('drop', async (ev)=>{
-      ev.preventDefault();
-      const file = ev.dataTransfer.files?.[0];
-      if(file) handleFile(file);
-    });
-
-    fileInput.addEventListener('change', ()=> handleFile(fileInput.files?.[0]));
-
-    clearBtn.addEventListener('click', ()=>{
-      fileInput.value='';
-      preview.src='';
-      preview.style.display='none';
-      output.textContent='— results will appear here —';
-      setStatus('No image loaded.');
-      currentDataUrl = null;
-      enableOCR(false);
-    });
-
-    async function handleFile(file){
-      if(!file.type.startsWith('image/')){ alert('Select an image file.'); return; }
-      setStatus('Loading image...');
-      output.textContent='— results will appear here —';
-
-      const dataUrl = await new Promise(res=>{
-        const fr = new FileReader();
-        fr.onload = ()=>res(fr.result);
-        fr.readAsDataURL(file);
-      });
-
-      currentDataUrl = dataUrl;
-      preview.src = dataUrl;
-      preview.style.display = 'block';
-      setStatus('Image loaded.');
-      enableOCR(true);
-    }
-
-    ocrBtn.addEventListener('click', async ()=>{
-      if(!currentDataUrl) return;
-      setStatus('Starting OCR... (Needs Internet)');
-      ocrBtn.disabled = true;
-
-      try{
-        const worker = Tesseract.createWorker({
-          logger: m => setStatus(`${m.status} ${(m.progress*100|0)}%`)
-        });
-
-        const lang = langSelect.value;
-
-        await worker.load();
-        await worker.loadLanguage(lang);
-        await worker.initialize(lang);
-
-        const { data } = await worker.recognize(currentDataUrl);
-        
-        // Clean up text (remove excessive newlines for the printer)
-        let cleanText = data.text.replace(/(\r\n|\n|\r)/gm, " ");
-        output.textContent = cleanText || '— No text found —';
-
-        downloadBtn.disabled = false;
-        printBtn.disabled = false; // Enable Print Button
-        
-        await worker.terminate();
-        setStatus('OCR complete. Connect to Printer WiFi now.');
-      }catch(err){
-        output.textContent = 'Error: ' + err.message;
-        setStatus('Error during OCR.');
-      }
+    const reader = new FileReader();
+    reader.onload = () => {
+      imageDataUrl = reader.result;
+      preview.src = imageDataUrl;
+      preview.style.display = "block";
+      
+      const msg = "Image loaded. Ready to scan.";
+      setStatus(msg);
+      speak(msg);
 
       ocrBtn.disabled = false;
-    });
+    };
+    reader.readAsDataURL(file);
+  };
 
-    downloadBtn.addEventListener('click', ()=>{
-      const text = output.textContent;
-      const blob = new Blob([text], {type:'text/plain'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'ocr-output.txt';
-      a.click();
-    });
+  // --- OCR Logic ---
+  ocrBtn.onclick = async () => {
+    const msg = "Scanning image...";
+    setStatus(msg);
+    speak(msg);
+    
+    ocrBtn.disabled = true;
+    output.value = "Scanning... please wait..."; // Show in text box
 
-    // --- NEW: PRINT TO BRAILLE FUNCTION ---
-    printBtn.addEventListener('click', () => {
-        const textToPrint = output.textContent.trim();
+    try{
+      const res1 = await fetch(imageDataUrl);
+      const blob = await res1.blob();
+      const formData = new FormData();
+      formData.append("file", blob, "image.png");
+      formData.append("apikey", OCR_API_KEY);
+      formData.append("language", "eng");
+      formData.append("OCREngine", "2");
 
-        if (!textToPrint || textToPrint === '— No text found —') {
-            alert("No text to print!");
-            return;
-        }
+      const res = await fetch("https://api.ocr.space/parse/image", {
+        method: "POST", body: formData
+      });
 
-        // Warning: Based on your Arduino code, long strings might get cut off
-        // or you might need to increase the buffer size in your Arduino code.
-        
-        // Construct URL for ESP8266
-        var espAddress = "http://192.168.4.1/print";
-        var fullUrl = espAddress + "?text=" + encodeURIComponent(textToPrint);
+      const data = await res.json();
 
-        setStatus("Sending to Printer...");
+      if(data.IsErroredOnProcessing){ throw new Error(data.ErrorMessage); }
 
-        fetch(fullUrl)
-        .then(response => {
-            if (response.ok) {
-                alert("Sent to Braille Printer!");
-                setStatus("Sent successfully.");
-            } else {
-                alert("Connected, but printer returned an error.");
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Connection Failed!\n\n1. Go to Phone Settings.\n2. Connect WiFi to 'JUST_Braille_Printer'.\n3. Come back and click Print again.");
-            setStatus("Connection failed. Check WiFi.");
-        });
-    });
+      let text = data.ParsedResults?.[0]?.ParsedText || "";
+      text = text.trim();
 
-    enableOCR(false);
-  </script>
+      if(!text) {
+        output.value = ""; // Clear box
+        output.placeholder = "No text found in image.";
+        setStatus("No text found.");
+        speak("I could not find any text.");
+      } else {
+        output.value = text; // Put text in editable box
+        const successMsg = "Text extracted.";
+        setStatus(successMsg);
+        speak(successMsg + " You can edit it now.");
+      }
+
+    }catch(err){
+      console.error(err);
+      output.value = "Error during scan.";
+      setStatus("Scan failed.");
+      speak("Scanning failed.");
+    }
+    ocrBtn.disabled = false;
+  };
+
+  // --- 🔊 Read Aloud Logic ---
+  readBtn.onclick = () => {
+    const text = output.value; // Get text from Textarea
+    if(text) {
+      speak(text);
+    } else {
+      speak("The text box is empty.");
+    }
+  };
+
+  // --- Print Logic ---
+  printBtn.onclick = () => {
+    const text = output.value; // Get text from Textarea
+    
+    if(!text) {
+        alert("Please type some text or scan an image first.");
+        speak("Please enter some text first.");
+        return;
+    }
+
+    if(!confirm("Are you connected to 'JUST_Braille_Printer' WiFi?")) return;
+
+    speak("Sending to printer.");
+    setStatus("Sending...");
+
+    fetch("http://192.168.4.1/print?text=" + encodeURIComponent(text), { mode: 'no-cors' })
+      .then(() => {
+        const doneMsg = "Sent to Braille printer.";
+        setStatus(doneMsg);
+        speak(doneMsg);
+        alert("✅ " + doneMsg);
+      })
+      .catch(() => {
+        const failMsg = "Connection failed. Check WiFi.";
+        setStatus(failMsg);
+        speak(failMsg);
+        alert("❌ " + failMsg);
+      });
+  };
+
+});
+</script>
+
 </body>
 </html>
